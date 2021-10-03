@@ -1,6 +1,6 @@
+use maplit::hashmap;
 use std::collections::HashMap;
 use std::fmt;
-use maplit::hashmap;
 
 use crate::commands::Direction;
 
@@ -17,7 +17,7 @@ impl Map {
                     id: Location::GameRoom,
                     name: String::from("Game room"),
                     description: String::from("There is a computer"),
-                    exit: hashmap!{Direction::South => Location::Kitchen},
+                    exit: hashmap! {Direction::South => Location::Kitchen},
                 },
                 Room {
                     id: Location::Kitchen,
@@ -25,7 +25,7 @@ impl Map {
                     description: String::from(
                         "There is a table with a key on it. A door leading north.",
                     ),
-                    exit: hashmap!{Direction::North => Location::GameRoom},
+                    exit: hashmap! {Direction::North => Location::GameRoom},
                 },
             ],
         }
@@ -57,10 +57,14 @@ impl Room {
 
 impl fmt::Display for Room {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Location: {}\n{}", self.name.as_str(), self.description.as_str())
+        write!(
+            f,
+            "Location: {}\n{}",
+            self.name.as_str(),
+            self.description.as_str()
+        )
     }
 }
-
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Location {

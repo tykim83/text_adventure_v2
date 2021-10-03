@@ -12,5 +12,5 @@ impl Player {
 
     pub fn change_location(&mut self, new_location: Location) {
         self.location = new_location
-    } 
+    }
 }

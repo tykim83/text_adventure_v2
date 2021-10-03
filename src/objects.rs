@@ -13,37 +13,39 @@ impl Items {
                     name: String::from("Table"),
                     description: String::from("It's an old table"),
                     location: Location::Kitchen,
-                    can_pick_up: false,
+                    can_picked_up: false,
                 },
                 Item {
                     id: Objects::Key,
                     name: String::from("Key"),
                     description: String::from("It's a key"),
                     location: Location::Kitchen,
-                    can_pick_up: true,
+                    can_picked_up: true,
                 },
                 Item {
                     id: Objects::GameRoomDoor,
                     name: String::from("Door"),
                     description: String::from("It's a normal door"),
                     location: Location::Kitchen,
-                    can_pick_up: false,
+                    can_picked_up: false,
                 },
                 Item {
                     id: Objects::Computer,
                     name: String::from("Computer"),
                     description: String::from("It's a computer"),
                     location: Location::GameRoom,
-                    can_pick_up: false,
+                    can_picked_up: false,
                 },
                 Item {
                     id: Objects::Game,
                     name: String::from("Game"),
-                    description: String::from("It's a copy of Monkey Island, can't wait to play it."),
+                    description: String::from(
+                        "It's a copy of Monkey Island, can't wait to play it.",
+                    ),
                     location: Location::Inventory,
-                    can_pick_up: true,
+                    can_picked_up: true,
                 },
-            ]
+            ],
         }
     }
 
@@ -51,14 +53,37 @@ impl Items {
         // return the item if player is in the correct room
         self.list
             .iter()
-            .find(|c| c.id == item && (c.location == player_location || c.location == Location::Inventory))
+            .find(|c| {
+                c.id == item && (c.location == player_location || c.location == Location::Inventory)
+            })
             .map(|c| c.description.as_str())
             .unwrap_or("Not found")
     }
 
     pub fn inventory(&self) {
-        for (index, item) in self.list.iter().filter(|c| c.location == Location::Inventory).enumerate() {
+        for (index, item) in self
+            .list
+            .iter()
+            .filter(|c| c.location == Location::Inventory)
+            .enumerate()
+        {
             println!("{}: {}", index + 1, item.name);
+        }
+    }
+
+    pub fn pick_up_item(&mut self, item: Objects, loc: Location) -> &str {
+        let result = self.list.iter_mut().find(|c| c.id == item && c.can_picked_up);
+
+        match result {
+            Some(i) => {
+                if i.location == loc {
+                    i.location = Location::Inventory;
+                    i.name.as_str()
+                } else {
+                    "I cant see it"
+                }
+            },
+            None => "I can't pick it up",
         }
     }
 }
@@ -69,7 +94,7 @@ pub struct Item {
     name: String,
     pub description: String,
     location: Location,
-    can_pick_up: bool,
+    can_picked_up: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]

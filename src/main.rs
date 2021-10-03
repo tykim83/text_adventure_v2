@@ -1,29 +1,27 @@
-mod map;
-mod player;
 mod commands;
+mod map;
 mod objects;
+mod player;
 
-use map::{Map, Location};
+use commands::{Commands, LookAt};
+use map::{Location, Map};
 use objects::Items;
 use player::Player;
-use commands::{Commands, LookAt};
 
 use std::io;
 use std::io::Write;
 
 fn main() {
-
     // Init game entities
     let mut player = Player::new(Location::Kitchen);
     let map = Map::init();
-    let items = Items::new();
+    let mut items = Items::new();
 
     // Run game
-    run(&mut player, &map, &items);
-
+    run(&mut player, &map, &mut items);
 }
 
-fn run(player: &mut Player, map: &Map, items: &Items) {
+fn run(player: &mut Player, map: &Map, items: &mut Items) {
     // clear console
     print!("\x1B[2J\x1B[1;1H");
     let mut input = String::new();
@@ -40,9 +38,7 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
             .read_line(&mut input)
             .expect("Failed to read line");
 
-
         match Commands::parse(&input.trim().to_lowercase()) {
-
             Commands::Move(dir) => {
                 match room.get_direction(&dir) {
                     Some(loc) => {
@@ -53,25 +49,30 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
                     }
                     None => println!("Wrong direction!"),
                 };
+            }
+
+            Commands::Look(item) => match item {
+                LookAt::Room => {
+                    print!("\x1B[2J\x1B[1;1H");
+                    println!("{}", room);
+                }
+                LookAt::Item(item) => {
+                    println!("{}", items.get_item_description(item, player.location))
+                }
+                LookAt::Inventory => items.inventory(),
             },
 
-            Commands::Look(item) => {
-                match item {
-                    LookAt::Room => {
-                        print!("\x1B[2J\x1B[1;1H");
-                        println!("{}", room);
-                    },
-                    LookAt::Item(item) => println!("{}", items.get_item_description(item, player.location)),
-                    LookAt::Inventory => items.inventory(),
-                }
+            Commands::Get(item) => match item {
+                objects::Objects::NotFound => println!("I can't see it"),
+                _ => println!("{}", items.pick_up_item(item, player.location)),
             },
 
             Commands::Exit => break,
 
             Commands::None => {
                 println!("Invalid input!");
-                continue
-            },
+                continue;
+            }
         }
     }
 }
@@ -79,7 +80,8 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
 // ToDo - V2
 // Only look at items located in the current room - Done
 // look at inventory - check inventory when look at item - Done
-// get item - will have to modify room description (this might give a problem with owenership)
+// get item - Done
+// Fix room description when item removed
 // open door - this will work if correct item is in the inventory
 
 // Todo - V3
@@ -88,8 +90,6 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
 // use rust traits
 // dynamic storage -- MongoDB???
 // players items
-
-
 
 // V4 Rocket and Yew
 

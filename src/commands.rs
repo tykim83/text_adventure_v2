@@ -4,14 +4,14 @@ use crate::objects::Objects;
 pub enum Commands {
     Move(Direction),
     Look(LookAt),
+    Get(Objects),
     Exit,
     None,
 }
 
 impl Commands {
     pub fn parse(cmd: &str) -> Commands {
-        let mut v = cmd
-            .split(|c| c == ' ');
+        let mut v = cmd.split(|c| c == ' ');
 
         let cmd = v.next().unwrap_or("");
         let item = v.next();
@@ -22,19 +22,19 @@ impl Commands {
             "south" | "s" => Commands::Move(Direction::South),
             "west" | "w" => Commands::Move(Direction::West),
             "east" | "e" => Commands::Move(Direction::East),
-            "look" => {
-                match item {
-                    Some(c) => {
-                        match c {
-                            "inventory" => Commands::Look(LookAt::Inventory),
-                            _ => Commands::Look(LookAt::Item(Objects::get(c))),
-                        }  
-                    },
-                    None => Commands::Look(LookAt::Room),
-                }
-            }, 
+            "look" => match item {
+                Some(c) => match c {
+                    "inventory" => Commands::Look(LookAt::Inventory),
+                    _ => Commands::Look(LookAt::Item(Objects::get(c))),
+                },
+                None => Commands::Look(LookAt::Room),
+            },
+            "get" => match item {
+                Some(c) => Commands::Get(Objects::get(c)),
+                None => Commands::Get(Objects::NotFound),
+            },
             _ => Commands::None,
-        }  
+        }
     }
 }
 
