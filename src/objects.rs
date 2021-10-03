@@ -71,15 +71,18 @@ impl Items {
         }
     }
 
-    pub fn pick_up_item(&mut self, item: Objects, room : &mut Room) -> String {
-        let result = self.list.iter_mut().find(|c| c.id == item && c.can_picked_up);
+    pub fn pick_up_item(&mut self, item: Objects, room: &mut Room) -> String {
+        let result = self
+            .list
+            .iter_mut()
+            .find(|c| c.id == item && c.can_picked_up);
 
         match result {
             Some(i) if i.location == room.id => {
                 room.change_description(item);
                 i.location = Location::Inventory;
                 format!("I have got the {}", i.name)
-            },
+            }
             Some(_) => String::from("I cant see it"),
             None => String::from("I can't pick it up"),
         }

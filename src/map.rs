@@ -18,7 +18,7 @@ impl Map {
                     id: Location::GameRoom,
                     name: String::from("Game room"),
                     description: String::from("There is a computer"),
-                    exit: hashmap! {Direction::South => Location::Kitchen},
+                    exit: hashmap! {Direction::South => Door { where_to: Location::Kitchen, is_locked: false }},
                 },
                 Room {
                     id: Location::Kitchen,
@@ -26,7 +26,7 @@ impl Map {
                     description: String::from(
                         "There is a table with a key on it. A door leading north.",
                     ),
-                    exit: hashmap! {Direction::North => Location::GameRoom},
+                    exit: hashmap! {Direction::North => Door { where_to: Location::GameRoom, is_locked: true }},
                 },
             ],
         }
@@ -34,10 +34,7 @@ impl Map {
 
     pub fn current_location_mut(&mut self, location: &Location) -> &mut Room {
         // ToDo - remove unwrap()
-        self.rooms
-            .iter_mut()
-            .find(|c| c.id == *location)
-            .unwrap()
+        self.rooms.iter_mut().find(|c| c.id == *location).unwrap()
     }
 
     pub fn current_location(&self, location: &Location) -> Room {
@@ -55,16 +52,24 @@ pub struct Room {
     pub id: Location,
     pub name: String,
     pub description: String,
-    pub exit: HashMap<Direction, Location>,
+    pub exit: HashMap<Direction, Door>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Door {
+    pub where_to: Location,
+    pub is_locked: bool,
 }
 
 impl Room {
-    pub fn get_direction(&self, dir: &Direction) -> Option<Location> {
+    pub fn get_direction(&self, dir: &Direction) -> Option<Door> {
         self.exit.get(dir).copied()
     }
 
     pub fn change_description(&mut self, item: Objects) {
-        if item == Objects::Key { self.description = String::from("There is a table. A door leading north.");  }
+        if item == Objects::Key {
+            self.description = String::from("There is a table. A door leading north.");
+        }
     }
 }
 
