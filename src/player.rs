@@ -7,7 +7,7 @@ pub struct Player {
 
 impl Player {
     pub fn new(location: Location) -> Player {
-        Player { location: location }
+        Player { location }
     }
 
     pub fn change_location(&mut self, new_location: Location) {
