@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::fmt;
 
 use crate::commands::Direction;
+use crate::objects::Objects;
 
 #[derive(Debug)]
 pub struct Map {
@@ -31,6 +32,14 @@ impl Map {
         }
     }
 
+    pub fn current_location_mut(&mut self, location: &Location) -> &mut Room {
+        // ToDo - remove unwrap()
+        self.rooms
+            .iter_mut()
+            .find(|c| c.id == *location)
+            .unwrap()
+    }
+
     pub fn current_location(&self, location: &Location) -> Room {
         // ToDo - remove unwrap()
         self.rooms
@@ -43,7 +52,7 @@ impl Map {
 
 #[derive(Debug, Clone)]
 pub struct Room {
-    id: Location,
+    pub id: Location,
     pub name: String,
     pub description: String,
     pub exit: HashMap<Direction, Location>,
@@ -52,6 +61,10 @@ pub struct Room {
 impl Room {
     pub fn get_direction(&self, dir: &Direction) -> Option<Location> {
         self.exit.get(dir).copied()
+    }
+
+    pub fn change_description(&mut self, item: Objects) {
+        if item == Objects::Key { self.description = String::from("There is a table. A door leading north.");  }
     }
 }
 

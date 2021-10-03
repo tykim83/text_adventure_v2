@@ -1,4 +1,4 @@
-use crate::map::Location;
+use crate::map::{Location, Room};
 
 pub struct Items {
     pub list: Vec<Item>,
@@ -71,19 +71,17 @@ impl Items {
         }
     }
 
-    pub fn pick_up_item(&mut self, item: Objects, loc: Location) -> &str {
+    pub fn pick_up_item(&mut self, item: Objects, room : &mut Room) -> String {
         let result = self.list.iter_mut().find(|c| c.id == item && c.can_picked_up);
 
         match result {
-            Some(i) => {
-                if i.location == loc {
-                    i.location = Location::Inventory;
-                    i.name.as_str()
-                } else {
-                    "I cant see it"
-                }
+            Some(i) if i.location == room.id => {
+                room.change_description(item);
+                i.location = Location::Inventory;
+                format!("I have got the {}", i.name)
             },
-            None => "I can't pick it up",
+            Some(_) => String::from("I cant see it"),
+            None => String::from("I can't pick it up"),
         }
     }
 }
