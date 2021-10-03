@@ -62,7 +62,7 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
                         println!("{}", room);
                     },
                     LookAt::Item(item) => println!("{}", items.get_item_description(item, player.location)),
-                    LookAt::Inventory => println!("Inventory: ..."),
+                    LookAt::Inventory => items.inventory(),
                 }
             },
 
@@ -78,7 +78,7 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
 
 // ToDo - V2
 // Only look at items located in the current room - Done
-// look at inventory - check inventory when look at item
+// look at inventory - check inventory when look at item - Done
 // get item - will have to modify room description (this might give a problem with owenership)
 // open door - this will work if correct item is in the inventory
 
@@ -87,6 +87,7 @@ fn run(player: &mut Player, map: &Map, items: &Items) {
 // 5 rooms
 // use rust traits
 // dynamic storage -- MongoDB???
+// players items
 
 
 

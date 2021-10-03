@@ -66,4 +66,5 @@ impl fmt::Display for Room {
 pub enum Location {
     GameRoom,
     Kitchen,
+    Inventory,
 }

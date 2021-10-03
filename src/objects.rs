@@ -36,6 +36,13 @@ impl Items {
                     location: Location::GameRoom,
                     can_pick_up: false,
                 },
+                Item {
+                    id: Objects::Game,
+                    name: String::from("Game"),
+                    description: String::from("It's a copy of Monkey Island, can't wait to play it."),
+                    location: Location::Inventory,
+                    can_pick_up: true,
+                },
             ]
         }
     }
@@ -44,9 +51,15 @@ impl Items {
         // return the item if player is in the correct room
         self.list
             .iter()
-            .find(|c| c.id == item && c.location == player_location)
+            .find(|c| c.id == item && (c.location == player_location || c.location == Location::Inventory))
             .map(|c| c.description.as_str())
             .unwrap_or("Not found")
+    }
+
+    pub fn inventory(&self) {
+        for (index, item) in self.list.iter().filter(|c| c.location == Location::Inventory).enumerate() {
+            println!("{}: {}", index + 1, item.name);
+        }
     }
 }
 
@@ -65,6 +78,7 @@ pub enum Objects {
     Table,
     GameRoomDoor,
     Computer,
+    Game,
     NotFound,
 }
 
@@ -75,6 +89,7 @@ impl Objects {
             "table" => Objects::Table,
             "door" => Objects::GameRoomDoor,
             "computer" => Objects::Computer,
+            "game" => Objects::Game,
             _ => Objects::NotFound,
         }
     }
