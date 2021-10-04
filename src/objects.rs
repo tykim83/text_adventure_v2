@@ -61,9 +61,7 @@ impl Items {
     }
 
     pub fn is_game_over(&self) -> bool {
-        self.list
-            .iter()
-            .any(|c| c.location == Location::Inventory)
+        self.list.iter().any(|c| c.location == Location::Inventory)
     }
 
     pub fn inventory(&self) {
@@ -106,7 +104,9 @@ impl Items {
             .iter_mut()
             .find(|c| c.id == item && c.can_picked_up);
 
-        if let Some(i) = result { i.location = Location::Dropped }
+        if let Some(i) = result {
+            i.location = Location::Dropped
+        }
     }
 }
 
