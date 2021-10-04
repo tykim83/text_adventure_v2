@@ -87,8 +87,13 @@ fn run(player: &mut Player, map: &mut Map, items: &mut Items) {
 
             Commands::None => {
                 println!("Invalid input!");
-                continue;
             }
+        }
+
+        // Check for Game Over
+        if !items.is_game_over() {
+            println!("Game Over");
+            break;
         }
     }
 }

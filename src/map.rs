@@ -70,6 +70,10 @@ impl Room {
                 println!("The door is now open");
                 true
             },
+            Objects::Game if self.id == Location::GameRoom => {
+                println!("I can't believe it. I am finally playing Monkey Island");
+                true
+            },
             _ => {
                 println!("I can't do it");
                 false
