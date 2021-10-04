@@ -71,6 +71,12 @@ impl Items {
         }
     }
 
+    pub fn is_in_inventory(&self, item: Objects) -> bool {
+        self.list
+            .iter()
+            .any(|c| c.location == Location::Inventory && c.id == item)
+    }
+
     pub fn pick_up_item(&mut self, item: Objects, room: &mut Room) -> String {
         let result = self
             .list

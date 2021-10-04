@@ -5,7 +5,7 @@ mod player;
 
 use commands::{Commands, LookAt};
 use map::{Location, Map};
-use objects::Items;
+use objects::{Items, Objects};
 use player::Player;
 
 use std::io;
@@ -64,7 +64,7 @@ fn run(player: &mut Player, map: &mut Map, items: &mut Items) {
             },
 
             Commands::Get(item) => match item {
-                objects::Objects::NotFound => println!("I can't see it"),
+                Objects::NotFound => println!("I can't see it"),
                 _ => {
                     println!(
                         "{}",
@@ -72,6 +72,11 @@ fn run(player: &mut Player, map: &mut Map, items: &mut Items) {
                     );
                     room = map.current_location(&player.location);
                 }
+            },
+
+            Commands::Use(item) => match item {
+                _ if items.is_in_inventory(item) => println!("{:?}", item),
+                _ => println!("I can't see it"),
             },
 
             Commands::Exit => break,
@@ -83,29 +88,3 @@ fn run(player: &mut Player, map: &mut Map, items: &mut Items) {
         }
     }
 }
-
-// ToDo - V2
-// Only look at items located in the current room - Done
-// look at inventory - check inventory when look at item - Done
-// get item - Done
-// Fix room description when item removed - Done
-// locked door - Done
-// use item
-// use key(where there is the correct locked door)-> Open door
-// use game(where there is a computer) -> will play the game -> Game Over
-
-// Todo - V3
-// 4 rooms
-// rooms and player hold items
-// use rust traits - ECS
-// dynamic storage - MongoDB json
-// use RefCell
-
-// Room description sample
-// There is an old table
-// The key lie there next to a note.
-// A door leading north
-
-// V4 Rocket and Yew
-
-// V5 Bevy

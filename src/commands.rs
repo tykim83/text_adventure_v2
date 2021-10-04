@@ -5,6 +5,7 @@ pub enum Commands {
     Move(Direction),
     Look(LookAt),
     Get(Objects),
+    Use(Objects),
     Exit,
     None,
 }
@@ -32,6 +33,10 @@ impl Commands {
             "get" => match item {
                 Some(c) => Commands::Get(Objects::get(c)),
                 None => Commands::Get(Objects::NotFound),
+            },
+            "use" => match item {
+                Some(c) => Commands::Use(Objects::get(c)),
+                None => Commands::Use(Objects::NotFound),
             },
             _ => Commands::None,
         }
