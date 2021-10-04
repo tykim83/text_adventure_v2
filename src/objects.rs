@@ -93,6 +93,15 @@ impl Items {
             None => String::from("I can't pick it up"),
         }
     }
+
+    pub fn drop_item(&mut self, item: Objects) {
+        let result = self
+            .list
+            .iter_mut()
+            .find(|c| c.id == item && c.can_picked_up);
+
+        if let Some(i) = result { i.location = Location::Dropped }
+    }
 }
 
 #[derive(Debug)]

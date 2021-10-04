@@ -75,7 +75,11 @@ fn run(player: &mut Player, map: &mut Map, items: &mut Items) {
             },
 
             Commands::Use(item) => match item {
-                _ if items.is_in_inventory(item) => println!("{:?}", item),
+                _ if items.is_in_inventory(item) => {
+                        if room.use_item(item) {
+                            items.drop_item(item)
+                        }  
+                }
                 _ => println!("I can't see it"),
             },
 

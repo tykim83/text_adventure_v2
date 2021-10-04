@@ -62,6 +62,21 @@ pub struct Door {
 }
 
 impl Room {
+    pub fn use_item(&mut self, item: Objects) -> bool {
+        match item {
+            Objects::Key if self.id == Location::Kitchen => {
+                let exit = self.exit.get_mut(&Direction::North).unwrap();
+                exit.is_locked = false;
+                println!("The door is now open");
+                true
+            },
+            _ => {
+                println!("I can't do it");
+                false
+            },
+        }
+    }
+
     pub fn get_direction(&self, dir: &Direction) -> Option<Door> {
         self.exit.get(dir).copied()
     }
@@ -89,4 +104,5 @@ pub enum Location {
     GameRoom,
     Kitchen,
     Inventory,
+    Dropped,
 }
